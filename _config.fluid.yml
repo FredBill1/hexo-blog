@@ -16,10 +16,48 @@ navbar:
 # Home Page
 #---------------------------
 index:
+  # 首页 Banner 头图，可以是相对路径或绝对路径，以下相同
+  # Path of Banner image, can be a relative path or an absolute path, the same on other pages
+  banner_img: /img/background.png
+
   slogan:
     # 为空则按 hexo config.subtitle 显示
     # If empty, text based on `subtitle` in hexo config
     text:
+
+
+#---------------------------
+# 文章页
+# Post Page
+#---------------------------
+post:
+  banner_img: /img/background.png
+
+
+#---------------------------
+# 归档页
+# Archive Page
+#---------------------------
+archive:
+  banner_img: /img/background.png
+
+
+#---------------------------
+# 分类页
+# Category Page
+#---------------------------
+category:
+  banner_img: /img/background.png
+
+
+#---------------------------
+# 标签页
+# Tag Page
+#---------------------------
+tag:
+  enable: true
+  banner_img: /img/background.png
+
 
 #---------------------------
 # 关于页
@@ -27,7 +65,7 @@ index:
 #---------------------------
 about:
   enable: true
-  banner_img: /img/default.png
+  banner_img: /img/background.png
   banner_img_height: 60
   banner_mask_alpha: 0.3
   avatar: https://avatars.githubusercontent.com/FredBill1
@@ -37,3 +75,31 @@ about:
   # More icons can be found from https://hexo.fluid-dev.com/docs/en/icon/  `class` is the css class of the icon. If adding `qrcode`, The icon is no longer a link, but a hovering QR code
   icons:
     - { class: "iconfont icon-github-fill", link: "https://github.com/FredBill1", tip: "GitHub" }
+
+
+#---------------------------
+# 自定义页
+# Custom Page
+#
+# 通过 hexo new page 命令创建的页面
+# Custom Page through `hexo new page`
+#---------------------------
+page:
+  banner_img: /img/background.png
+
+
+#---------------------------
+# 404页
+# 404 Page
+#---------------------------
+page404:
+  banner_img: /img/background.png
+
+
+#---------------------------
+# 友链页
+# Links Page
+#---------------------------
+links:
+  enable: true
+  banner_img: /img/background.png
