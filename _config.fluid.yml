@@ -80,6 +80,7 @@ index:
 #---------------------------
 post:
   banner_img: /img/background.png
+  banner_img_height: 55
 
   comments:
     enable: true
@@ -120,6 +121,7 @@ giscus:
 # Archive Page
 #---------------------------
 archive:
+  banner_img_height: 55
   banner_img: /img/background.png
 
 
@@ -128,6 +130,7 @@ archive:
 # Category Page
 #---------------------------
 category:
+  banner_img_height: 55
   banner_img: /img/background.png
 
 
@@ -136,7 +139,7 @@ category:
 # Tag Page
 #---------------------------
 tag:
-  enable: true
+  banner_img_height: 55
   banner_img: /img/background.png
 
 
@@ -147,7 +150,7 @@ tag:
 about:
   enable: true
   banner_img: /img/background.png
-  banner_img_height: 60
+  banner_img_height: 55
   banner_mask_alpha: 0.3
   avatar: https://avatars.githubusercontent.com/FredBill1
   name: FredBill
@@ -166,6 +169,7 @@ about:
 # Custom Page through `hexo new page`
 #---------------------------
 page:
+  banner_img_height: 55
   banner_img: /img/background.png
 
 
@@ -182,5 +186,5 @@ page404:
 # Links Page
 #---------------------------
 links:
-  enable: true
+  banner_img_height: 55
   banner_img: /img/background.png
