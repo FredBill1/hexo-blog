@@ -2,8 +2,8 @@
 title: 在wsl中使用windows的代理
 date: 2023-11-11 16:49:41
 tags:
-  - wsl
   - linux
+  - wsl
 categories:
   - 编程
 ---
