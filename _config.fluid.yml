@@ -33,6 +33,39 @@ index:
 post:
   banner_img: /img/background.png
 
+  comments:
+    enable: true
+    # 指定的插件，需要同时设置对应插件的必要参数
+    # The specified plugin needs to set the necessary parameters at the same time
+    # Options: utterances | disqus | gitalk | valine | waline | changyan | livere | remark42 | twikoo | cusdis | giscus | discuss
+    type: giscus
+
+
+#---------------------------
+# 评论插件
+# Comment plugins
+#
+# 开启评论需要先设置上方 `post: comments: enable: true`，然后根据 `type` 设置下方对应的评论插件参数
+# Enable comments need to be set `post: comments: enable: true`, then set the corresponding comment plugin parameters below according to `type`
+#---------------------------
+
+# Giscus
+# 基于 GitHub Discussions，类似于 Utterances
+# Based on GitHub Discussions, similar to Utterances
+# See: https://giscus.app/
+giscus:
+  repo: FredBill1/FredBill1.github.io
+  repo-id: R_kgDOKsKEdA
+  category: General
+  category-id: DIC_kwDOKsKEdM4Ca4I6
+  theme: preferred_color_scheme
+  mapping: pathname
+  strict: 1
+  reactions-enabled: 1
+  emit-metadata: 0
+  input-position: bottom
+  lang: zh-CN
+  loading: lazy
 
 #---------------------------
 # 归档页
