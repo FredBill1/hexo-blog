@@ -1,5 +1,6 @@
 ---
 title: 使用opencv生成划痕蒙版
+index_img: https://i.stack.imgur.com/HT5BB.png
 date: 2023-11-12 11:15:25
 tags:
   - opencv
