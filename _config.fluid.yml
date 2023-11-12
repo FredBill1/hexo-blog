@@ -97,6 +97,14 @@ post:
     # Options: utterances | disqus | gitalk | valine | waline | changyan | livere | remark42 | twikoo | cusdis | giscus | discuss
     type: giscus
 
+  # 文章标题下方的元信息
+  # Meta information below title
+  meta:
+    # 浏览量计数
+    # Number of visits
+    views:
+      enable: true
+
 
 #---------------------------
 # 评论插件
@@ -196,3 +204,13 @@ page404:
 links:
   banner_img_height: 55
   banner_img: /img/background.png
+
+#---------------------------
+# 页脚
+# Footer
+#---------------------------
+footer:
+  # 展示网站的 PV、UV 统计数
+  # Display website PV and UV statistics
+  statistics:
+    enable: true
