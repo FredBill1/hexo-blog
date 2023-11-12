@@ -10,7 +10,7 @@ categories:
 
 # 在vcpkg中添加patch的方法
 
-参考：<https://learn.microsoft.com/en-us/vcpkg/examples/patching>
+> 参考：<https://learn.microsoft.com/en-us/vcpkg/examples/patching>
 
 ## 1. 以editable模式安装要patch的库
 

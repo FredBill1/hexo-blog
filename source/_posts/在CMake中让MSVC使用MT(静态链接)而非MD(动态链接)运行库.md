@@ -9,7 +9,7 @@ categories:
 
 # 在CMake中让MSVC使用MT(静态链接)而非MD(动态链接)运行库
 
-参考：<https://cmake.org/cmake/help/latest/prop_tgt/MSVC_RUNTIME_LIBRARY.html>
+> 参考：<https://cmake.org/cmake/help/latest/prop_tgt/MSVC_RUNTIME_LIBRARY.html>
 
 ```cmake
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")

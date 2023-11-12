@@ -10,7 +10,7 @@ categories:
 
 # 在wsl中使用windows的代理
 
-参考：<https://zhuanlan.zhihu.com/p/414627975>
+> 参考：<https://zhuanlan.zhihu.com/p/414627975>
 
 ## 1. 在`~/.bashrc`中添加
 
