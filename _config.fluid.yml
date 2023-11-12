@@ -46,6 +46,11 @@ dark_mode:
   default: dark
 
 
+custom_html: |
+  <canvas class="cursor-effect-canvas" style="position: fixed;left: 0;top: 0;z-index: 1000; pointer-events: none;" ></canvas> 
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.min.js"></script> 
+  <script type="text/javascript" src="/js/cursor-effect.js"></script>
+
 #---------------------------
 # 页头
 # Header
