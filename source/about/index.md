@@ -29,8 +29,9 @@ layout: about
     let mouseX = 0, mouseY = 0, scrollX = 0, scrollY = 0;
     let renderRequested = false;
     const distance = 25;
-    const maxAnimationCount = 50;
-    let animationCount = maxAnimationCount;
+    const maxBounceTime = 500;
+    let lastBounceTime = 0;
+    let bouncing = false;
 
     init();
 
@@ -98,24 +99,34 @@ layout: about
             renderRequested = true;
         });
         window.addEventListener("click", function (e) {
-            animationCount = 0;
-            renderRequested = true;
+            lastBounceTime = Date.now();
+            bouncing = true;
         });
     }
 
     function render() {
         requestAnimationFrame(render);
-        if (!renderRequested && animationCount >= maxAnimationCount) return;
-        renderRequested = false;
-        const centerX = container.getBoundingClientRect().left + container.clientWidth / 2;
-        const centerY = container.getBoundingClientRect().top + container.clientHeight / 2
-        camera.position.x = (mouseX - window.scrollX - centerX) / -100;
-        camera.position.z = (mouseY - window.scrollY - centerY) / 100;
-        camera.position.y = -Math.sqrt(distance * distance - camera.position.x * camera.position.x + camera.position.z * camera.position.z);
-        camera.lookAt(scene.position);
+        if (!renderRequested && !bouncing) return;
+        if (renderRequested) {
+            renderRequested = false;
+            const centerX = container.getBoundingClientRect().left + container.clientWidth / 2;
+            const centerY = container.getBoundingClientRect().top + container.clientHeight / 2
+            camera.position.x = (mouseX - window.scrollX - centerX) / -100;
+            camera.position.z = (mouseY - window.scrollY - centerY) / 100;
+            camera.position.y = -Math.sqrt(distance * distance - camera.position.x * camera.position.x + camera.position.z * camera.position.z);
+            camera.lookAt(scene.position);
+        }
 
-        ++animationCount;
-        fumoObject.scale.y = 1 - (animationCount >= maxAnimationCount ? 0 : 0.5 * Math.sin(animationCount / 5) / animationCount);
+        if (bouncing) {
+            const dt = Date.now() - lastBounceTime;
+            if (dt > maxBounceTime) {
+                bouncing = false;
+                fumoObject.scale.y = 1
+            } else {
+                const t = dt / maxBounceTime;
+                fumoObject.scale.y = 1 - 0.5 * Math.sin(t * Math.PI * 5) / (1 + t * t * 200);
+            }
+        }
         renderer.render(scene, camera);
     }
 
