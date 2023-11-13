@@ -21,18 +21,37 @@ jobs:
         with:
           node-version: '21'
 
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
       - name: Cache NPM dependencies
         uses: actions/cache@v3
         with:
-          path: node_modules
-          key: ${{ runner.OS }}-npm-cache
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.OS }}-npm-cache
+            ${{ runner.os }}-node-
       - name: Install NPM Dependencies
         run: npm install
 
+      - name: Resotre Build Cache
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            public
+            db.json
+          key: build-cache
       - name: Build
         run: npm run build
+      - name: Save Build Cache
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            public
+            db.json
+          key: build-cache
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v2
         with:
