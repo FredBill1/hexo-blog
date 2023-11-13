@@ -3,14 +3,29 @@ title: About
 layout: about
 ---
 
-<center>
-    <div style="height: 520px; overflow: hidden">
-        <object id="loading" data="/img/loading.svg" width="300" height="300"
-            style="padding-top: 130px; pointer-events: none; user-select: none;"> </object>
-        <div id="koishifumo" style="height: 600px;">
+<style>
+    .center {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -ms-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+</style>
+
+<div id="container" style="width: 100%; max-width: 500px; position: relative; overflow: hidden; margin: auto;">
+    <div id="loading" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+        <object class="center" data="/img/loading.svg" width="60%"></object>
+    </div>
+    <div style="padding-top: 112%;"></div>
+    <div style="position: absolute; top: -10%; bottom: 0; right: 0; left: 0;">
+        <div style="width: 100%; position: relative; overflow: hidden;">
+            <div style="padding-top: 150%;"></div>
+            <div id="koishifumo" style="position: absolute; top: 0; bottom: 0; right: 0; left: 0;"> </div>
         </div>
     </div>
-</center>
+</div>
 
 <script type="importmap">
     {
@@ -32,6 +47,9 @@ layout: about
     let mouseX = 0, mouseY = 0, scrollX = 0, scrollY = 0;
     let renderRequested = false;
     const distance = 25;
+    const maxZoom = 0.58;
+    const maxZoomWidth = 300;
+
     const maxBounceTime = 500;
     let lastBounceTime = 0;
     let bouncing = false;
@@ -46,11 +64,12 @@ layout: about
         // scene.add(new THREE.AmbientLight(0x999999));
         // scene.background = new THREE.Color(0x000000);
 
-
-        camera = new THREE.PerspectiveCamera(70, container.clientWidth / container.clientHeight, 1, 1000);
+        camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 1, 1000);
+        camera.zoom = maxZoom;
         camera.up.set(0, 0, 1);
         camera.position.set(0, -distance, 0);
         camera.lookAt(scene.position);
+        camera.updateProjectionMatrix();
 
         // camera.add(new THREE.PointLight(0xffffff, 250));
         scene.add(camera);
@@ -76,6 +95,7 @@ layout: about
             scene.add(fumoObject);
             renderRequested = true;
             document.getElementById("loading").remove();
+            document.getElementById("container").style.visibility = "visible";
             render();
         });
 
@@ -102,7 +122,7 @@ layout: about
             updateScroll();
             renderRequested = true;
         });
-        window.addEventListener("click", function (e) {
+        window.addEventListener("mousedown", function (e) {
             lastBounceTime = Date.now();
             bouncing = true;
         });
