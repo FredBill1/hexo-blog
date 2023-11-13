@@ -137,7 +137,7 @@ layout: about
             const centerY = container.getBoundingClientRect().top + container.clientHeight / 2
             camera.position.x = (mouseX - window.scrollX - centerX) / -100;
             camera.position.z = (mouseY - window.scrollY - centerY) / 100;
-            camera.position.y = -Math.sqrt(distance * distance - camera.position.x * camera.position.x + camera.position.z * camera.position.z);
+            camera.position.y = -Math.sqrt(distance * distance - camera.position.x * camera.position.x - camera.position.z * camera.position.z);
             camera.lookAt(scene.position);
         }
 
