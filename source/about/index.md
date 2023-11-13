@@ -134,9 +134,9 @@ layout: about
         if (renderRequested) {
             renderRequested = false;
             const centerX = container.getBoundingClientRect().left + container.clientWidth / 2;
-            const centerY = container.getBoundingClientRect().top + container.clientHeight / 2
-            camera.position.x = (mouseX - window.scrollX - centerX) / -100;
-            camera.position.z = (mouseY - window.scrollY - centerY) / 100;
+            const centerY = container.getBoundingClientRect().top + container.clientHeight / 2;
+            camera.position.x = (mouseX - window.scrollX - centerX) * -15 / window.innerWidth;
+            camera.position.z = (mouseY - window.scrollY - centerY) * 8 / window.innerHeight;
             camera.position.y = -Math.sqrt(distance * distance - camera.position.x * camera.position.x - camera.position.z * camera.position.z);
             camera.lookAt(scene.position);
         }
