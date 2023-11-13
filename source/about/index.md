@@ -5,7 +5,8 @@ layout: about
 
 <center>
     <div style="height: 520px; overflow: hidden">
-        <object id="loading" data="/img/loading.svg" width="300" height="300" style="padding-top: 130px;"> </object>
+        <object id="loading" data="/img/loading.svg" width="300" height="300"
+            style="padding-top: 130px; pointer-events: none; user-select: none;"> </object>
         <div id="koishifumo" style="height: 600px;">
         </div>
     </div>
