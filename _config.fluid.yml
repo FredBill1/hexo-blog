@@ -28,6 +28,20 @@ apple_touch_icon: https://avatars.githubusercontent.com/FredBill1
 # Force all links to be HTTPS (applicable to HTTP mixed error)
 force_https: true
 
+
+# 代码块的增强配置
+# Enhancements to code blocks
+code:
+  # 代码高亮
+  # Code highlight
+  highlight:
+    highlightjs:
+      # 在链接中挑选 style 填入
+      # Select a style in the link
+      # See: https://highlightjs.org/static/demo/
+      style: "github"
+      style_dark: "github-dark"
+
 # 一些好玩的功能
 # Some fun features
 fun_features:
