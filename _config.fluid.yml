@@ -51,6 +51,13 @@ custom_html: |
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.min.js"></script> 
   <script type="text/javascript" src="/js/cursor-effect.js"></script>
 
+# 对页面中的图片和评论插件进行懒加载处理，可见范围外的元素不会提前加载
+# Lazy loading of images and comment plugin on the page
+lazyload:
+  # 加载时的占位图片
+  # The placeholder image when loading
+  loading_img: /img/loading.svg
+
 #---------------------------
 # 页头
 # Header
