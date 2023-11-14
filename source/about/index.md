@@ -44,7 +44,7 @@ layout: about
 
     let container, camera, scene, renderer;
     let fumoObject;
-    let mouseX = 0, mouseY = 0, scrollX = 0, scrollY = 0;
+    let mouseX = NaN, mouseY = NaN, scrollX = 0, scrollY = 0;
     let renderRequested = false;
     const distance = 25;
     const maxZoom = 0.58;
@@ -134,10 +134,14 @@ layout: about
         if (!renderRequested && !bouncing) return;
         if (renderRequested) {
             renderRequested = false;
-            const centerX = container.getBoundingClientRect().left + container.clientWidth / 2;
-            const centerY = container.getBoundingClientRect().top + container.clientHeight / 2;
-            camera.position.x = (mouseX - window.scrollX - centerX) * -15 / window.innerWidth;
-            camera.position.z = (mouseY - window.scrollY - centerY) * 8 / window.innerHeight;
+            if (isNaN(mouseX) || isNaN(mouseY)) {
+                camera.position.x = camera.position.z = 0;
+            } else {
+                const centerX = container.getBoundingClientRect().left + container.clientWidth / 2;
+                const centerY = container.getBoundingClientRect().top + container.clientHeight / 2;
+                camera.position.x = (mouseX - window.scrollX - centerX) * -15 / window.innerWidth;
+                camera.position.z = (mouseY - window.scrollY - centerY) * 8 / window.innerHeight;
+            }
             camera.position.y = -Math.sqrt(distance * distance - camera.position.x * camera.position.x - camera.position.z * camera.position.z);
             camera.lookAt(scene.position);
         }
