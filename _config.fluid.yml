@@ -64,11 +64,13 @@ dark_mode:
 custom_js: 
   - //cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.min.js
   - /js/cursor-effect.js
+  - /js/banner-text-no-warp.js
 
 # 指定自定义 .css 文件路径，用法和 custom_js 相同
 # The usage is the same as custom_js
 custom_css:
   - /css/main-fade-in.css
+  - /css/banner-text-no-warp.css
 
 # 对页面中的图片和评论插件进行懒加载处理，可见范围外的元素不会提前加载
 # Lazy loading of images and comment plugin on the page
