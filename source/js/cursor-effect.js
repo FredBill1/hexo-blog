@@ -1,5 +1,14 @@
 /* https://codepen.io/juliangarnier/pen/gmOwJX */
-var canvasEl = document.querySelector(".cursor-effect-canvas");
+
+var canvasEl = document.createElement("canvas");
+canvasEl.classList.add("cursor-effect-canvas");
+canvasEl.style.position = "fixed";
+canvasEl.style.left = "0";
+canvasEl.style.top = "0";
+canvasEl.style.zIndex = "1000000";
+canvasEl.style.pointerEvents = "none";
+document.body.appendChild(canvasEl);
+
 var ctx = canvasEl.getContext("2d");
 var pointerX = 0;
 var pointerY = 0;

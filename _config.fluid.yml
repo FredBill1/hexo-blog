@@ -59,11 +59,11 @@ dark_mode:
   # Options: auto | light | dark
   default: dark
 
-
-custom_html: |
-  <canvas class="cursor-effect-canvas" style="position: fixed;left: 0;top: 0;z-index: 1000000; pointer-events: none;" ></canvas> 
-  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.min.js"></script> 
-  <script type="text/javascript" src="/js/cursor-effect.js"></script>
+# 指定自定义 .js 文件路径，支持列表；路径是相对 source 目录，如 /js/custom.js 对应存放目录 source/js/custom.js
+# Specify the path of your custom js file, support list. The path is relative to the source directory, such as `/js/custom.js` corresponding to the directory `source/js/custom.js`
+custom_js: 
+  - //cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.min.js
+  - /js/cursor-effect.js
 
 # 对页面中的图片和评论插件进行懒加载处理，可见范围外的元素不会提前加载
 # Lazy loading of images and comment plugin on the page
