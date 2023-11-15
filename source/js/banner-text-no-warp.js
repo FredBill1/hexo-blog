@@ -12,6 +12,8 @@ function adjustSubtitleFontSize() {
     if (subtitleWidth > parentWidth) {
         const newFontSize = currentFontSize * (parentWidth / subtitleWidth);
         subtitle.style.fontSize = `${newFontSize}px`;
+    } else {
+        subtitle.style.fontSize = `${currentFontSize}px`;
     }
 }
 window.addEventListener('resize', adjustSubtitleFontSize);
