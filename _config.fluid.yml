@@ -50,6 +50,17 @@ fun_features:
   typing:
     enable: false
 
+# 主题颜色配置，其他不生效的地方请使用自定义 css 解决，配色可以在下方链接中获得启发
+# Theme color, please use custom CSS to solve other colors, color schema can be inspired by the links below
+# See: https://www.webdesignrankings.com/resources/lolcolors/
+color:
+  # 顶部菜单字体色
+  # Color of navigation bar text
+  navbar_text_color_dark: "#fff"
+
+  # 副标题字体色
+  # Color of navigation bar text
+  subtitle_color_dark: "#fff"
 
 # 主题暗色模式，开启后菜单中会出现切换按钮，用户浏览器会存储切换选项，并且会遵循 prefers-color-scheme 自动切换
 # Theme dark mode. If enable, a switch button will appear on the menu, each of the visitor's browser will store his switch option
@@ -109,6 +120,11 @@ index:
   # Path of Banner image, can be a relative path or an absolute path, the same on other pages
   banner_img: /img/background.png
 
+  # 头图黑色蒙版的不透明度，available: 0 - 1.0， 1 是完全不透明
+  # Opacity of the banner mask, 1.0 is completely opaque
+  # Available: 0 - 1.0
+  banner_mask_alpha: 0
+
   slogan:
     # 为空则按 hexo config.subtitle 显示
     # If empty, text based on `subtitle` in hexo config
@@ -122,6 +138,7 @@ index:
 post:
   banner_img: /img/background.png
   banner_img_height: 55
+  banner_mask_alpha: 0
 
   comments:
     enable: true
@@ -164,6 +181,7 @@ giscus:
 archive:
   banner_img_height: 55
   banner_img: /img/background.png
+  banner_mask_alpha: 0
 
 
 #---------------------------
@@ -173,6 +191,7 @@ archive:
 category:
   banner_img_height: 55
   banner_img: /img/background.png
+  banner_mask_alpha: 0
 
 
 #---------------------------
@@ -182,6 +201,7 @@ category:
 tag:
   banner_img_height: 55
   banner_img: /img/background.png
+  banner_mask_alpha: 0
 
 
 #---------------------------
@@ -192,7 +212,7 @@ about:
   enable: true
   banner_img: /img/background.png
   banner_img_height: 55
-  banner_mask_alpha: 0.3
+  banner_mask_alpha: 0
   avatar: https://avatars.githubusercontent.com/FredBill1
   name: FredBill
   intro: ᗜˬᗜ
@@ -212,6 +232,7 @@ about:
 page:
   banner_img_height: 55
   banner_img: /img/background.png
+  banner_mask_alpha: 0
 
 
 #---------------------------
@@ -220,6 +241,7 @@ page:
 #---------------------------
 page404:
   banner_img: /img/background.png
+  banner_mask_alpha: 0
 
 
 #---------------------------
@@ -229,3 +251,4 @@ page404:
 links:
   banner_img_height: 55
   banner_img: /img/background.png
+  banner_mask_alpha: 0
