@@ -35,15 +35,15 @@ jobs:
       - name: Install NPM Dependencies
         run: npm install
 
-      - name: Cache build caches
-        uses: actions/cache@v3
-        with:
-          path: |
-            public
-            db.json
-          key: build-cache-${{ github.sha }}
-          restore-keys: |
-            build-cache-
+      # - name: Cache build caches
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: |
+      #       public
+      #       db.json
+      #     key: build-cache-${{ github.sha }}
+      #     restore-keys: |
+      #       build-cache-
       - name: Build
         run: npm run build
 
