@@ -12,6 +12,8 @@ categories:
 
 使用`multiprocessing.RawArray`存储数据，避免`Dataloader`在`num_workers > 0`时，所缓存的数据在进程间发生复制。
 
+{% contentbox python type:code %}
+
 ```python
 import ctypes
 import multiprocessing as mp
@@ -54,3 +56,5 @@ class SharedDataset(Dataset):
     def __getitem__(self, index: int) -> torch.Tensor:
         return F.to_tensor(self._images()[index])
 ```
+
+{% endcontentbox %}

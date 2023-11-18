@@ -15,6 +15,8 @@ categories:
 
 使用贝塞尔曲线生成划痕
 
+{% contentbox python type:code %}
+
 ```python
 from collections.abc import Generator
 
@@ -66,5 +68,7 @@ if __name__ == "__main__":
     cv.imshow("img", img)
     cv.waitKey(0)
 ```
+
+{% endcontentbox %}
 
 ![效果图](https://i.stack.imgur.com/HT5BB.png)

@@ -126,3 +126,24 @@ theme: fluid
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+
+
+# Content blocks
+## Docs: https://github.com/Sukwants/hexo-content-blocks
+content_blocks:
+  enable: true
+  open_button: fa fa-chevron-down
+  types:
+    code: "#448aff || iconfont icon-code"
+    note: "#448aff || fa fa-pen"
+    abstract: "#00b0ff || fa fa-clipboard-list"
+    info: "#00b8d4 || fa fa-circle-info"
+    tip: "#00bfa5 || fa fa-fire"
+    success: "#00c853 || fa fa-check"
+    question: "#64dd17 || fa fa-circle-question"
+    warning: "#ff9100 || fa fa-triangle-exclamation"
+    failure: "#ff5252 || fa fa-xmark"
+    danger: "#ff1744 || fa fa-bolt"
+    bug: "#f50057 || fa fa-bug"
+    example: "#7c4dff || fa fa-vial"
+    quote: "#9e9e9e || fa fa-quote-right"
