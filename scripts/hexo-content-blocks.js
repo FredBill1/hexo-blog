@@ -16,7 +16,7 @@ const openbutton = hexo.config.content_blocks.open_button;
 const types = hexo.config.content_blocks.types;
 
 for (const i in types) {
-  types[i] = types[i].split('||');
+  types[i] = types[i].split('|||');
   types[i][0] = types[i][0].trim();
   types[i][1] = types[i][1].trim();
   if (!types[i][0].startsWith('#')) {
@@ -60,32 +60,50 @@ ${all.map(x => `div.content.block.${x[0]} > p.content.block-title, details.conte
 ${all.map(x => `details.content.box.${x[0]} > summary`).join(',')} {
   cursor: pointer;
 }
+@keyframes box-open-anim {
+  0% { margin-bottom: -1rem; }
+  100% { margin-bottom: 1rem; }
+}
+@keyframes box-close-anim {
+  0% { margin-bottom: 1rem; }
+  100% { margin-bottom: 0rem; }
+}
+${all.map(x => `details.content.box.${x[0]}[open] > summary`).join(',')} {
+  animation: box-open-anim 150ms ease-out;
+  animation-fill-mode: forwards;
+}
 ${all.map(x => `details.content.box.${x[0]}:not([open]) > summary`).join(',')} {
-  margin-bottom: 0;
+  animation: box-close-anim 150ms ease-out;
+  animation-fill-mode: forwards;
+  margin-bottom: 0rem;
 }
 ${all.map(x => `div.content.block.${x[0]} > p.content.block-title, details.content.box.${x[0]} > summary {
   background-color: ${x[1][0]}1a;
 }`).join('\n')}
-${all.map(x => `div.content.block.${x[0]} > p.content.block-title > i, details.content.box.${x[0]} > summary > i {
+${all.map(x => `div.content.block.${x[0]} > p.content.block-title > .content-i, details.content.box.${x[0]} > summary > .content-i {
   margin: 0 0.6rem 0 0.6rem;
   color: ${x[1][0]};
 }`).join('\n')}
 ${all.map(x => `details.content.box.${x[0]} > summary > div.box-open-button`).join(',')} {
   float: right;
+  display: flex;
+  align-items: center;
+  padding: inherit;
 }
-${all.map(x => `details.content.box.${x[0]} > summary > div.box-open-button > i`).join(',')} {
+${all.map(x => `details.content.box.${x[0]} > summary > div.box-open-button > .content-i`).join(',')} {
   margin: 0 0.6rem 0 0.6rem;
   font-size: 0.7rem;
   transition: transform 250ms
 }
-${all.map(x => `details.content.box.${x[0]}:not([open]) > summary > div.box-open-button i`).join(',')} {
+${all.map(x => `details.content.box.${x[0]}:not([open]) > summary > div.box-open-button .content-i`).join(',')} {
   transform: rotate(270deg);
 }
-${all.map(x => `details.content.box.${x[0]}[open] > summary > div.box-open-button i`).join(',')} {
+${all.map(x => `details.content.box.${x[0]}[open] > summary > div.box-open-button .content-i`).join(',')} {
   transform: rotate(180deg);
 }
-${all.map(x => `details.content.box.${x[0]} summary div.box-open-button i {
+${all.map(x => `details.content.box.${x[0]} summary div.box-open-button .content-i {
   color: ${x[1][0]};
+  fill: ${x[1][0]};
 }`).join('\n')}
 div.content.cards * {
   box-sizing: border-box;
@@ -151,7 +169,7 @@ hexo.extend.tag.register('contentblock', (args, content) => {
   }
   return `
 <div class="content block ${type}">
-  <p class="content block-title"><i class="${types[type][1]} fa-fw"></i>${title}</p>
+  <p class="content block-title">${types[type][1]}${title}</p>
   ${hexo.render.renderSync({ text: content, engine: 'markdown' })}
 </div>
 `;
@@ -173,7 +191,7 @@ hexo.extend.tag.register('contentbox', (args, content) => {
   }
   return `
 <details class="content box ${type}"${open ? ' open' : ''}>
-  <summary><i class="${types[type][1]} fa-fw"></i>${title}<div class="box-open-button"><i class="${openbutton} fa-fw"></i></div></summary>
+  <summary>${types[type][1]}${title}<div class="box-open-button">${openbutton}</div></summary>
   ${hexo.render.renderSync({ text: content, engine: 'markdown' })}
 </details>
 `;
