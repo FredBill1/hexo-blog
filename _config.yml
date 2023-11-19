@@ -4,30 +4,6 @@
 
 # Site
 title: FredBill's Blog
-subtitle: |
-  <script>
-  const spellcards = [
-    "表象「列祖列宗入梦来」",
-    "表象「弹幕偏执症」",
-    "本能「本我的解放」",
-    "抑制「Super Ego」",
-    "反应「妖怪测谎机」",
-    "无意识「弹幕的墨迹测验」",
-    "复燃「恋爱的埋火」",
-    "深层「无意识的基因」",
-    "「被厌恶者的哲学」",
-    "「Subterranean Rose」",
-    "心符「没我之爱」",
-    "记忆「DNA的瑕疵」",
-    "「胎儿之梦」",
-    "「蔷薇地狱」",
-    "梦符「先祖大人在看着你」",
-    "＊现在就给你打电话别忘了接哦＊",
-    "「Perfect Mind Control」",
-    "地灵符「Mind Stellar Relief」",
-  ];
-  document.write(spellcards[Math.floor(Math.random() * spellcards.length)]);
-  </script>
 description: ''
 keywords:
 author: FredBill
