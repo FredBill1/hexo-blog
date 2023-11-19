@@ -105,6 +105,19 @@ banner:
 
 
 #---------------------------
+# 页脚
+# Footer
+#---------------------------
+footer:
+  # 页脚第一行文字的 HTML，建议保留 Fluid 的链接，用于向更多人推广本主题
+  # HTML of the first line of the footer, it is recommended to keep the Fluid link to promote this theme to more people
+  content: '
+    <a href="https://www.pixiv.net/artworks/81371906" target="_blank" rel="nofollow noopener"><span>封面pid：81371906</span></a>
+    <i class="iconfont icon-love"></i>
+    <a href="https://www.pixiv.net/users/53683955" target="_blank" rel="nofollow noopener"><span>画师：endlesscat</span></a>
+  '
+
+#---------------------------
 # 首页
 # Home Page
 #---------------------------
