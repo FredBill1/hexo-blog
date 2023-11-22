@@ -167,7 +167,7 @@ post:
 # Based on GitHub Discussions, similar to Utterances
 # See: https://giscus.app/
 giscus:
-  repo: FredBill1/FredBill1.github.io
+  repo: FredBill1/hexo-blog
   repo-id: R_kgDOKsKEdA
   category: General
   category-id: DIC_kwDOKsKEdM4Ca4I6
