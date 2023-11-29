@@ -1,19 +1,25 @@
 ---
-title: ST表
-date: 2023-11-29 19:20:04
+title: LCA
+date: 2023-11-29 22:30:57
 tags:
   - 算法
+  - 图论
+  - LCA
   - 数据结构
   - ST表
 categories:
-  - [算法, 数据结构]
+  - [算法, 图论]
 ---
 
-# ST表
-
-> 参考：<https://github.com/the-tourist/algo>
+# LCA
 
 ## 1. 模板
+
+### 1.1 用欧拉序列转化为-rmq-问题
+
+> 参考：<https://oi-wiki.org/graph/lca/#用欧拉序列转化为-rmq-问题>
+
+{% post_link ST表 'ST表的模板' %}
 
 {% contentbox "cpp &lt;SparseTable&gt;" type:code %}
 
@@ -70,74 +76,78 @@ class SparseTable {
 
 {% endcontentbox %}
 
-{% contentbox "python SparseTable.py" type:code %}
+{% contentbox "cpp &lt;LCA&gt;" type:code %}
 
-```python
-from collections.abc import Callable
-from typing import Generic, TypeVar
+```cpp
+#include <algorithm>
+#include <stack>
 
-T = TypeVar("T")
+#include <SparseTable>
 
+class LCA {
+    std::vector<int> dfn, nfd;
+    SparseTable<int> st;
 
-class SparseTable(Generic[T]):
-    def __init__(self, data: list[T], func: Callable[[T, T], T]) -> None:
-        self.func = func
-        self.st = st = [data]
-        i, N = 1, len(st[0])
-        while 2 * i <= N:
-            pre = st[-1]
-            st.append([func(pre[j], pre[j + i]) for j in range(N - 2 * i + 1)])
-            i <<= 1
-
-    def query(self, begin: int, end: int) -> T:  # [begin, end)
-        assert 0 <= begin < end <= len(self.st[0])
-        lg = (end - begin).bit_length() - 1
-        return self.func(self.st[lg][begin], self.st[lg][end - (1 << lg)])
+   public:
+    LCA(const std::vector<std::vector<int>>& G, int root) {
+        int N = static_cast<int>(G.size());
+        dfn.resize(N), nfd.resize(N);
+        std::vector<int> parent(N, root);
+        std::stack<int> S({root});
+        for (int cnt = -1, u; !S.empty();) {
+            u = S.top(), S.pop();
+            if (cnt != -1) nfd[cnt] = parent[u];
+            dfn[u] = ++cnt;
+            for (int v : G[u]) {
+                if (v == parent[u]) continue;
+                parent[v] = u, S.push(v);
+            }
+        }
+        std::vector<int> data(N);
+        for (int i = 0; i < N; ++i) data[i] = dfn[nfd[i]];
+        st = SparseTable<int>(std::move(data), [](int a, int b) { return std::min(a, b); });
+    }
+    int operator()(int a, int b) {
+        if (a == b) return a;
+        auto [l, r] = std::minmax(dfn[a], dfn[b]);
+        return nfd[st.get(l, r)];
+    }
+};
 ```
 
 {% endcontentbox %}
 
 ## 2. 例题
 
-### 2.1 [洛谷P3865](https://www.luogu.com.cn/problem/P3865) 查询区间最大值
+### 2.1 [洛谷P3379](https://www.luogu.com.cn/problem/P3379) LCA
 
 {% contentbox "cpp" type:code %}
 
 ```cpp
 #include <bits/stdc++.h>
 
-#include <SparseTable>
+#include <LCA>
 
 using namespace std;
 
 int main() {
     ios::sync_with_stdio(false), cin.tie(0);
-    int N, M;
-    cin >> N >> M;
-    vector<int> a(N);
-    for (auto& x : a) cin >> x;
-    SparseTable<int> st(std::move(a), [](int x, int y) { return max(x, y); });
+    int N, M, root;
+    cin >> N >> M >> root;
+    vector<vector<int>> G(N + 1);
+    while (--N) {
+        int u, v;
+        cin >> u >> v;
+        G[u].push_back(v);
+        G[v].push_back(u);
+    }
+    LCA lca(G, root);
     while (M--) {
-        int l, r;
-        cin >> l >> r;
-        cout << st.get(l - 1, r) << '\n';
+        int u, v;
+        cin >> u >> v;
+        cout << lca(u, v) << '\n';
     }
 }
-```
-
-{% endcontentbox %}
-
-{% contentbox "python" type:code %}
-
-```python
-from SparseTable import SparseTable
-
-N, M = map(int, input().split())
-a = [int(v) for v in input().split()]
-st = SparseTable(a, max)
-for _ in range(M):
-    l, r = map(int, input().split())
-    print(st.query(l - 1, r))
 ```
 
 {% endcontentbox %}
