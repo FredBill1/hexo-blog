@@ -89,6 +89,11 @@ class LCA {
     SparseTable<int> st;
 
    public:
+    LCA() = default;
+    LCA(const LCA&) = default;
+    LCA(LCA&&) = default;
+    LCA& operator=(const LCA&) = default;
+    LCA& operator=(LCA&&) = default;
     LCA(const std::vector<std::vector<int>>& G, int root) {
         int N = static_cast<int>(G.size());
         dfn.resize(N), nfd.resize(N);
@@ -113,6 +118,65 @@ class LCA {
         return nfd[st.get(l, r)];
     }
 };
+```
+
+{% endcontentbox %}
+
+{% contentbox "python SparseTable.py" type:code %}
+
+```python
+from collections.abc import Callable
+from typing import Generic, TypeVar
+
+T = TypeVar("T")
+
+
+class SparseTable(Generic[T]):
+    def __init__(self, data: list[T], func: Callable[[T, T], T]) -> None:
+        self.func = func
+        self.st = st = [data]
+        i, N = 1, len(st[0])
+        while 2 * i <= N:
+            pre = st[-1]
+            st.append([func(pre[j], pre[j + i]) for j in range(N - 2 * i + 1)])
+            i <<= 1
+
+    def query(self, begin: int, end: int) -> T:  # [begin, end)
+        assert 0 <= begin < end <= len(self.st[0])
+        lg = (end - begin).bit_length() - 1
+        return self.func(self.st[lg][begin], self.st[lg][end - (1 << lg)])
+```
+
+{% endcontentbox %}
+
+{% contentbox "python LCA.py" type:code %}
+
+```python
+from collections import deque
+
+from SparseTable import SparseTable
+
+class LCA:
+    def __init__(self, G: list[list[int]], root: int) -> None:
+        N = len(G)
+        self.dfn, self.nfd, parent = ([root] * N for _ in range(3))
+        cnt = -1
+        S = deque([root])
+        while S:
+            u = S.pop()
+            self.nfd[cnt] = parent[u]
+            self.dfn[u] = cnt = cnt + 1
+            for v in G[u]:
+                if v != parent[u]:
+                    parent[v] = u
+                    S.append(v)
+        self.st = SparseTable([self.dfn[u] for u in self.nfd], min)
+
+    def __call__(self, a: int, b: int) -> int:
+        if a == b:
+            return a
+        a, b = self.dfn[a], self.dfn[b]
+        return self.nfd[self.st.query(a, b) if a < b else self.st.query(b, a)]
 ```
 
 {% endcontentbox %}
@@ -148,6 +212,26 @@ int main() {
         cout << lca(u, v) << '\n';
     }
 }
+```
+
+{% endcontentbox %}
+
+{% contentbox "python" type:code %}
+
+```python
+from LCA import LCA
+
+N, Q, S = map(int, input().split())
+G = [[] for _ in range(N + 1)]
+for _ in range(N - 1):
+    u, v = map(int, input().split())
+    G[u].append(v)
+    G[v].append(u)
+
+lca = LCA(G, S)
+for _ in range(Q):
+    a, b = map(int, input().split())
+    print(lca(a, b))
 ```
 
 {% endcontentbox %}
