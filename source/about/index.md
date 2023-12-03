@@ -12,6 +12,15 @@ layout: about
         -ms-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
     }
+
+    .author {
+        opacity: 0.2;
+        transition: opacity 0.15s;
+    }
+
+    .author:hover {
+        opacity: 1;
+    }
 </style>
 
 <div id="container" style="width: 100%; max-width: 500px; position: relative; overflow: hidden; margin: auto;">
@@ -26,6 +35,8 @@ layout: about
         </div>
     </div>
 </div>
+
+<p class="author" style="text-align: center;">模型作者: <a href="https://skfb.ly/ozsGo" target="_blank">203Null</a></p>
 
 <script type="importmap">
     {
