@@ -153,6 +153,13 @@ post:
     # Options: utterances | disqus | gitalk | valine | waline | changyan | livere | remark42 | twikoo | cusdis | giscus | discuss
     type: giscus
 
+  # 数学公式，开启之前需要更换 Markdown 渲染器，否则复杂公式会有兼容问题，具体请见：https://hexo.fluid-dev.com/docs/guide/##latex-数学公式
+  # Mathematical formula. If enable, you need to change the Markdown renderer, see: https://hexo.fluid-dev.com/docs/en/guide/#math
+  math:
+    # 开启后文章默认可用，自定义页面如需使用，需在 Front-matter 中指定 `math: true`
+    # If you want to use math on the custom page, you need to set `math: true` in Front-matter
+    enable: true
+
 
 #---------------------------
 # 评论插件
