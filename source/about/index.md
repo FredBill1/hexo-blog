@@ -24,16 +24,16 @@ layout: about
 </style>
 
 <div id="container" style="width: 100%; max-width: 500px; position: relative; overflow: hidden; margin: auto;">
-    <div id="loading" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
-        <object class="center" data="/img/loading.svg" width="60%"></object>
-    </div>
-    <div style="padding-top: 112%;"></div>
-    <div style="position: absolute; top: -10%; bottom: 0; right: 0; left: 0;">
-        <div style="width: 100%; position: relative; overflow: hidden;">
-            <div style="padding-top: 150%;"></div>
-            <div id="koishifumo" style="position: absolute; top: 0; bottom: 0; right: 0; left: 0;"> </div>
-        </div>
-    </div>
+<div id="loading" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
+<object class="center" data="/img/loading.svg" width="60%"></object>
+</div>
+<div style="padding-top: 112%;"></div>
+<div style="position: absolute; top: -10%; bottom: 0; right: 0; left: 0;">
+<div style="width: 100%; position: relative; overflow: hidden;">
+<div style="padding-top: 150%;"></div>
+<div id="koishifumo" style="position: absolute; top: 0; bottom: 0; right: 0; left: 0;"> </div>
+</div>
+</div>
 </div>
 
 <p class="author" style="text-align: center;">模型作者: <a href="https://skfb.ly/ozsGo" target="_blank">203Null</a></p>
