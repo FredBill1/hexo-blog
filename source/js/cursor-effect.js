@@ -12,10 +12,6 @@ document.body.appendChild(canvasEl);
 var ctx = canvasEl.getContext("2d");
 var pointerX = 0;
 var pointerY = 0;
-var tap =
-  "ontouchstart" in window || navigator.msMaxTouchPoints
-    ? "touchstart"
-    : "mousedown";
 var colors = ["#FF1461", "#18FF92", "#5A87FF", "#FBF38C"];
 
 const numberOfParticules = 20;
@@ -141,7 +137,7 @@ var render = anime({
 });
 
 document.addEventListener(
-  tap,
+  "click",
   function (e) {
     render.play();
     updateCoords(e);

@@ -133,8 +133,7 @@ layout: about
             updateScroll();
             renderRequested = true;
         });
-        const tap = "ontouchstart" in window || navigator.msMaxTouchPoints ? "touchstart" : "mousedown";
-        window.addEventListener(tap, function (e) {
+        window.addEventListener("click", function (e) {
             lastBounceTime = Date.now();
             bouncing = true;
         });
