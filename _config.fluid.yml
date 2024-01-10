@@ -146,6 +146,15 @@ post:
   banner_img_height: 55
   banner_mask_alpha: 0
 
+  # 侧边栏展示当前分类下的文章
+  # Sidebar of category
+  category_bar:
+    enable: true
+
+    # 开启后，只有在文章 Front-matter 里指定 `category_bar: true` 才会展示分类，也可以通过 `category_bar: ["分类A"]` 来指定分类
+    # If true, only set `category_bar: true` in Front-matter will enable sidebar of category, also set `category_bar: ["CategoryA"]` to specify categories
+    specific: false
+
   comments:
     enable: true
     # 指定的插件，需要同时设置对应插件的必要参数
