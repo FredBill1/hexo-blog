@@ -21,11 +21,10 @@ categories:
 #include <cassert>
 #include <functional>
 #include <vector>
-
+#if (1)
 #ifdef _MSC_VER
 #include <intrin.h>
 #endif
-
 int countl_zero(unsigned int n) {
 #ifdef _MSC_VER
     unsigned long index;
@@ -35,7 +34,13 @@ int countl_zero(unsigned int n) {
     return __builtin_clz(n);
 #endif
 }
-
+#else   // if (1)
+int countl_zero(unsigned int n) {
+    int res = 0;
+    while (!(x & 0x80000000)) ++res, x <<= 1;
+    return res;
+}
+#endif  // if (1)
 template <typename T, class F = std::function<T(const T&, const T&)>>
 class SparseTable {
     int n;
