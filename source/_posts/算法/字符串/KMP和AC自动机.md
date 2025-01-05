@@ -14,7 +14,7 @@ categories:
 
 > 参考：<https://oi-wiki.org/string/kmp>
 
-{% contentbox "python KMP.py" type:code %}
+{% contentbox "python kmp.py" type:code %}
 
 ```python
 def get_p(s: str) -> list[int]:
@@ -55,6 +55,52 @@ def kmp_all(s: str, t: str) -> list[int]:
             res.append(r - len(t) + 1)
             l = p[l - 1]
     return res
+```
+
+{% endcontentbox %}
+
+{% contentbox "cpp kmp.cpp" type:code %}
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> get_p(const string_view s) {
+    vector<int> p(s.size());
+    int l = 0;
+    for (int r = 1; r < int(s.size()); ++r) {
+        while (l > 0 && s[l] != s[r]) l = p[l - 1];
+        if (s[l] == s[r]) ++l;
+        p[r] = l;
+    }
+    return p;
+}
+
+int kmp(const string_view text, const string_view pattern) {
+    auto p = get_p(pattern);
+    int l = 0;
+    for (int r = 0; r < int(text.size()); ++r) {
+        while (l > 0 && pattern[l] != text[r]) l = p[l - 1];
+        if (pattern[l] == text[r]) ++l;
+        if (l == int(pattern.size())) return r - l + 1;
+    }
+    return -1;
+}
+
+vector<int> kmp_all(const string_view text, const string_view pattern) {
+    auto p = get_p(pattern);
+    vector<int> pos;
+    int l = 0;
+    for (int r = 0; r < int(text.size()); ++r) {
+        while (l > 0 && pattern[l] != text[r]) l = p[l - 1];
+        if (pattern[l] == text[r]) ++l;
+        if (l == int(pattern.size())) {
+            pos.push_back(r - l + 1);
+            l = p[l - 1];
+        }
+    }
+    return pos;
+}
 ```
 
 {% endcontentbox %}
@@ -143,6 +189,102 @@ N = int(input())
 patterns = [input() for _ in range(N)]
 text = input()
 print(*ac_automation(patterns, text), sep="\n")
+```
+
+{% endcontentbox %}
+
+{% contentbox "cpp ac_automation.cpp" type:code %}
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+constexpr int CHAR_SIZE = 26;
+constexpr int CHAR_START = 'a';
+
+struct TrieNode {
+    TrieNode* ch[CHAR_SIZE]{};
+    vector<int> idxes;
+    int visit_cnt = 0;
+    TrieNode* fail = nullptr;
+    int in_degree = 0;
+};
+
+vector<int> ac_automation(const vector<string>& patterns, const string& text) {
+    vector<unique_ptr<TrieNode>> nodes;
+    auto new_node = [&]() { return nodes.emplace_back(make_unique<TrieNode>()).get(); };
+    TrieNode* const root = new_node();
+
+    // build trie
+    for (int idx = 0; idx < int(patterns.size()); ++idx) {
+        TrieNode* cur = nodes.front().get();
+        for (auto c : patterns[idx]) {
+            int i = c - CHAR_START;
+            if (!cur->ch[i]) cur->ch[i] = new_node();
+            cur = cur->ch[i];
+        }
+        cur->idxes.push_back(idx);
+    }
+
+    // build fail pointer
+    root->fail = root;
+    queue<TrieNode*> q;
+    for (int i = 0; i < CHAR_SIZE; ++i) {
+        if (root->ch[i]) {
+            root->ch[i]->fail = root;
+            q.push(root->ch[i]);
+        } else {
+            root->ch[i] = root;
+        }
+    }
+    while (!q.empty()) {
+        TrieNode* cur = q.front();
+        q.pop();
+        for (int i = 0; i < CHAR_SIZE; ++i) {
+            if (cur->ch[i] == nullptr) {
+                cur->ch[i] = cur->fail->ch[i];
+            } else {
+                cur->ch[i]->fail = cur->fail->ch[i];
+                ++cur->fail->ch[i]->in_degree;
+                q.push(cur->ch[i]);
+            }
+        }
+    }
+
+    // search
+    TrieNode* cur = root;
+    for (auto c : text) {
+        int i = c - CHAR_START;
+        cur = cur->ch[i];
+        ++cur->visit_cnt;
+    }
+
+    // count occurrences with topological sort
+    vector<int> occurrences(patterns.size());
+    for (auto& x : nodes)
+        if (x->in_degree == 0) q.push(x.get());
+    while (!q.empty()) {
+        TrieNode* cur = q.front();
+        q.pop();
+        for (int idx : cur->idxes) occurrences[idx] += cur->visit_cnt;
+        cur->fail->visit_cnt += cur->visit_cnt;
+        if (--cur->fail->in_degree == 0) q.push(cur->fail);
+    }
+
+    return occurrences;
+}
+
+int main() {
+    ios::sync_with_stdio(false), cin.tie(0);
+    int N;
+    cin >> N;
+    vector<string> patterns(N);
+    for (auto& s : patterns) cin >> s;
+    string text;
+    cin >> text;
+    auto occurrences = ac_automation(patterns, text);
+    cout << count_if(occurrences.begin(), occurrences.end(), [](int x) { return x > 0; });
+}
 ```
 
 {% endcontentbox %}
