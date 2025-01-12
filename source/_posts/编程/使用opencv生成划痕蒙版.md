@@ -71,4 +71,4 @@ if __name__ == "__main__":
 
 {% endcontentbox %}
 
-![效果图](https://i.stack.imgur.com/HT5BB.png)
+<img src="https://i.sstatic.net/HT5BB.png" alt="效果图" referrerpolicy="no-referrer" />
