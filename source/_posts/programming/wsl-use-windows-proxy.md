@@ -1,5 +1,5 @@
 ---
-title: 在wsl中使用windows的代理
+title: 在wsl中使用windows的代理 (已过时)
 date: 2023-11-11 16:49:41
 tags:
   - linux
@@ -8,7 +8,7 @@ categories:
   - 编程
 ---
 
-# 在wsl中使用windows的代理
+# 在wsl中使用windows的代理 (已过时)
 
 > 参考：<https://zhuanlan.zhihu.com/p/414627975>
 
