@@ -475,7 +475,7 @@ int main() {
 
 虽然不是正解，但还是放这了
 
-{% post_link 编程/y-combinator-in-C 'y_combinator的模板' %}
+{% post_link programming/y-combinator-in-C 'y_combinator的模板' %}
 
 {% contentbox "cpp" type:code %}
 
