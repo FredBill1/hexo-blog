@@ -7,6 +7,7 @@ tags:
   - LCA
   - 数据结构
   - ST表
+  - 倍增
 categories:
   - [算法, 图论]
 ---
@@ -182,6 +183,58 @@ class LCA:
             return a
         a, b = self.dfn[a], self.dfn[b]
         return self.nfd[self.st.query(a, b) if a < b else self.st.query(b, a)]
+```
+
+{% endcontentbox %}
+
+### 1.2 用倍增法求解
+
+> 参考：<https://oi-wiki.org/graph/lca/#倍增算法>
+
+{% contentbox "python LCA.py" type:code %}
+
+```python
+from collections import deque
+
+
+class LCA:
+    def __init__(self, G: list[list[int]], root: int) -> None:
+        N = len(G)
+        self.MAX_POW = N.bit_length()
+
+        self.dep = [0] * N
+        fa = [-1] * N
+        fa[root] = root
+        S = deque([root])
+        while S:
+            u = S.pop()
+            for v in G[u]:
+                if fa[v] == -1:
+                    fa[v] = u
+                    self.dep[v] = self.dep[u] + 1
+                    S.append(v)
+        self.st = [fa]
+        for _ in range(self.MAX_POW):
+            pre = self.st[-1]
+            self.st.append([pre[pre[x]] for x in range(N)])
+
+    def __call__(self, a: int, b: int) -> int:
+        if a == b:
+            return a
+        if self.dep[a] != self.dep[b]:
+            if self.dep[a] < self.dep[b]:
+                a, b = b, a
+            diff = self.dep[a] - self.dep[b]
+            for i in range(self.MAX_POW + 1):
+                if diff & (1 << i):
+                    a = self.st[i][a]
+        if a == b:
+            return a
+        for i in range(self.MAX_POW, -1, -1):
+            if self.st[i][a] != self.st[i][b]:
+                a = self.st[i][a]
+                b = self.st[i][b]
+        return self.st[0][a]
 ```
 
 {% endcontentbox %}
