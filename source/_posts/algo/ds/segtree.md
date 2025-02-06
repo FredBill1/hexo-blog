@@ -428,3 +428,73 @@ int main() {
 ```
 
 {% endcontentbox %}
+
+### 2.2 [CF2057D](https://codeforces.com/contest/2057/problem/D) 单点修改，查询全局区间最值
+
+查询 $\operatorname{max} (a_l, a_{l + 1}, \ldots, a_r) - \operatorname{min} (a_l, a_{l + 1}, \ldots, a_r) - (r - l)$ 的最大值。
+
+思路：
+
+- 若 $a_l > a_r$ ，则答案为 $a_l - a_r - (r - l) = (a_l + l) - (a_r + r)$
+- 若 $a_l < a_r$ ，则答案为 $a_r - a_l - (r - l) = (a_r - r) - (a_l - l)$
+
+用线段树维护 $a_i + i$ 和 $a_i - i$ 的最大值和最小值，在合并区间时维护答案。
+
+{% contentbox "cpp" type:code %}
+
+```cpp
+#include <bits/stdc++.h>
+
+#include <atcoder/segtree>
+
+using namespace std;
+using ll = long long;
+constexpr auto INF = numeric_limits<ll>::max() / 4;
+
+struct S {
+    ll sub_min, add_min;
+    ll sub_max, add_max;
+    ll ans;
+};
+S get_S(ll x, int i) {
+    S s;
+    s.sub_min = s.sub_max = x - i;
+    s.add_min = s.add_max = x + i;
+    s.ans = 0;
+    return s;
+}
+constexpr S op(S lhs, S rhs) {
+    S ans;
+    ans.sub_min = min(lhs.sub_min, rhs.sub_min);
+    ans.add_min = min(lhs.add_min, rhs.add_min);
+    ans.sub_max = max(lhs.sub_max, rhs.sub_max);
+    ans.add_max = max(lhs.add_max, rhs.add_max);
+    ans.ans = max({lhs.ans, rhs.ans, rhs.sub_max - lhs.sub_min, lhs.add_max - rhs.add_min});
+    return ans;
+}
+constexpr S e() { return {INF, INF, -INF, -INF, 0}; }
+using segtree = atcoder::segtree<S, op, e>;
+void solve() {
+    int N, Q;
+    cin >> N >> Q;
+    vector<S> b(N);
+    for (int i = 0, x; i < N; ++i) cin >> x, b[i] = get_S(x, i);
+    segtree seg(b);
+    cout << seg.all_prod().ans << '\n';
+    for (int p, x; Q--;) {
+        cin >> p >> x;
+        --p;
+        seg.set(p, get_S(x, p));
+        cout << seg.all_prod().ans << '\n';
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false), cin.tie(0);
+    int T;
+    cin >> T;
+    while (T--) solve();
+}
+```
+
+{% endcontentbox %}
