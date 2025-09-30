@@ -184,9 +184,9 @@ post:
 # See: https://giscus.app/
 giscus:
   repo: FredBill1/hexo-blog
-  repo-id: R_kgDOKsKEdA
+  repo-id: R_kgDOP53Czg
   category: General
-  category-id: DIC_kwDOKsKEdM4Ca4I6
+  category-id: DIC_kwDOP53Czs4CwFFe
   theme: preferred_color_scheme
   mapping: pathname
   strict: 1
