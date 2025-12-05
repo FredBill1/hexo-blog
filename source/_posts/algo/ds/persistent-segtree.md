@@ -299,6 +299,178 @@ class persistent_segtree {
 
 {% endcontentbox %}
 
+{% contentbox "cpp &lt;persistent_segtree&gt;" type:code %}
+
+```cpp
+template <class S, S (*op)(S, S), S (*e)(), S (*diff)(S, S) = nullptr>
+class persistent_segtree {
+    struct Node {
+        S val;
+        const Node *left, *right;
+    };
+
+    static inline Node node_pool[int(1e6)];
+    static inline int node_cnt = 0;
+    static Node* create_node() { return &node_pool[node_cnt++]; }
+
+    int _n;
+    const Node *_root, *_other;
+    static const Node* _build(const std::vector<S>& v, int s, int t) {
+        // 对 [s,t] 区间建立线段树
+        Node* node = create_node();
+        if (s == t) {
+            node->val = v[s];
+            node->left = node->right = nullptr;
+            return node;
+        }
+        int m = s + ((t - s) >> 1);
+        node->left = _build(v, s, m);
+        node->right = _build(v, m + 1, t);
+        node->val = op(node->left->val, node->right->val);
+        return node;
+    }
+    static const Node* _set(const Node* root, int p, S x, int s, int t) {
+        Node* node = create_node();
+        if (s == t) {
+            node->val = x;
+            node->left = node->right = nullptr;
+            return node;
+        }
+        int m = s + ((t - s) >> 1);
+        if (p <= m) {
+            node->left = _set(root->left, p, x, s, m);
+            node->right = root->right;
+        } else {
+            node->left = root->left;
+            node->right = _set(root->right, p, x, m + 1, t);
+        }
+        node->val = op(node->left->val, node->right->val);
+        return node;
+    }
+    static S _get(const Node* root, const Node* other, int p, int s, int t) {
+        if (s == t) return other == nullptr ? root->val : diff(root->val, other->val);
+        int m = s + ((t - s) >> 1);
+        if (p <= m) return _get(root->left, other == nullptr ? nullptr : other->left, p, s, m);
+        return _get(root->right, other == nullptr ? nullptr : other->right, p, m + 1, t);
+    }
+    static S _prod(const Node* root, const Node* other, int l, int r, int s, int t) {
+        if (l <= s && t <= r) return other == nullptr ? root->val : diff(root->val, other->val);
+        int m = s + ((t - s) >> 1);
+        S res = e();
+        if (l <= m) res = _prod(root->left, other == nullptr ? nullptr : other->left, l, r, s, m);
+        if (r > m) res = op(res, _prod(root->right, other == nullptr ? nullptr : other->right, l, r, m + 1, t));
+        return res;
+    }
+    template <class F>
+    static int _max_right(const Node* root, const Node* other, int l, F f, S& sm, int s, int t) {
+        if (l == s)
+            if (S nxt = op(sm, other == nullptr ? root->val : diff(root->val, other->val)); f(nxt)) return sm = nxt, t;
+        if (s == t) return s - 1;
+        int m = s + ((t - s) >> 1);
+        if (l > m) return _max_right(root->right, other == nullptr ? nullptr : other->right, l, f, sm, m + 1, t);
+        int r = _max_right(root->left, other == nullptr ? nullptr : other->left, l, f, sm, s, m);
+        if (r < m) return r;
+        return _max_right(root->right, other == nullptr ? nullptr : other->right, m + 1, f, sm, m + 1, t);
+    }
+    template <class F>
+    static int _min_left(const Node* root, const Node* other, int r, F f, S& sm, int s, int t) {
+        if (r == t)
+            if (S nxt = op(other == nullptr ? root->val : diff(root->val, other->val), sm); f(nxt)) return sm = nxt, s;
+        if (s == t) return t + 1;
+        int m = s + ((t - s) >> 1);
+        if (r <= m) return _min_left(root->left, other == nullptr ? nullptr : other->left, r, f, sm, s, m);
+        int l = _min_left(root->right, other == nullptr ? nullptr : other->right, r, f, sm, m + 1, t);
+        if (l > m + 1) return l;
+        return _min_left(root->left, other == nullptr ? nullptr : other->left, m, f, sm, s, m);
+    }
+
+    explicit persistent_segtree(int n, const Node* root, const Node* other = nullptr)
+        : _n(n), _root(root), _other(other) {}
+
+   public:
+    persistent_segtree() : persistent_segtree(0, nullptr) {}
+    explicit persistent_segtree(int n) : persistent_segtree(std::vector<S>(n, e())) {}
+    explicit persistent_segtree(const std::vector<S>& v)
+        : persistent_segtree(v.size(), v.size() ? _build(v, 0, v.size() - 1) : nullptr) {}
+    persistent_segtree(persistent_segtree&& rhs) noexcept : persistent_segtree(rhs._n, rhs._root) {
+        rhs._root = nullptr;
+    }
+    persistent_segtree& operator=(persistent_segtree&& rhs) noexcept {
+        if (this != &rhs) {
+            _n = rhs._n;
+            _root = rhs._root;
+            rhs._root = nullptr;
+        }
+        return *this;
+    }
+    persistent_segtree(const persistent_segtree& rhs) : persistent_segtree(rhs._n, rhs._root) {}
+    persistent_segtree& operator=(const persistent_segtree& rhs) {
+        if (this != &rhs) {
+            _n = rhs._n;
+            _root = rhs._root;
+            ++_root->ref_cnt;
+        }
+        return *this;
+    }
+    int size() const { return _n; }
+    persistent_segtree set(int p, S x) {
+        assert(_other == nullptr);
+        assert(0 <= p && p < _n);
+        return persistent_segtree(_n, _set(_root, p, x, 0, _n - 1));
+    }
+    S get(int p) const {
+        assert(0 <= p && p < _n);
+        return _get(_root, _other, p, 0, _n - 1);
+    }
+    S prod(int l, int r) const {
+        assert(0 <= l && l <= r && r <= _n);
+        if (l == r) return e();
+        return _prod(_root, _other, l, r - 1, 0, _n - 1);
+    }
+    persistent_segtree operator-(const persistent_segtree& other) const {
+        static_assert(diff != nullptr, "Must specify diff function");
+        assert(_other == nullptr && other._other == nullptr);
+        assert(_n == other._n);
+        return persistent_segtree(_n, _root, other._root);
+    }
+    S all_prod() const {
+        assert(_root != nullptr);
+        return _other == nullptr ? _root->val : diff(_root->val, _other->val);
+    }
+    // r==l-1 or f(op(a[l],a[l+1],...,a[r])) = true
+    // r==high or f(op(a[l],a[l+1],...,a[r+1])) = false
+    template <bool (*f)(S)>
+    int max_right(int l) const {
+        return max_right(_root, l, [](S x) { return f(x); });
+    }
+    template <class F>
+    int max_right(int l, F f) const {
+        assert(0 <= l && l < _n);
+        assert(f(e()));
+        S sm = e();
+        return _max_right(_root, _other, l, f, sm, 0, _n - 1);
+    }
+
+    // l==r+1 or f(op(a[l],a[l+1],...,a[r])) = true
+    // l==low or f(op(a[l-1],a[l],...,a[r])) = false
+    template <bool (*f)(S)>
+    int min_left(int r) const {
+        return min_left(_root, r, [](S x) { return f(x); });
+    }
+    template <class F>
+    int min_left(int r, F f) const {
+        assert(0 <= r && r < _n);
+        assert(f(e()));
+        S sm = e();
+        return _min_left(_root, _other, r, f, sm, 0, _n - 1);
+    }
+
+    static void reset_node_cnt() { node_cnt = 0; }
+};
+```
+
+{% endcontentbox %}
+
 ## 2. 例题
 
 ### 2.1 [洛谷P3919](https://www.luogu.com.cn/problem/P3919) 单点修改，单点查询
