@@ -585,6 +585,34 @@ class LazySegtree(Generic[S, F]):
 
             _build(1, 0, self._N - 1)
 
+    def set(self, p: int, x: S) -> None:
+        def _set(i: int, tl: int, tr: int, p: int, x: S) -> None:
+            if tl == tr:
+                self._d[i] = x
+                return
+            self._push(i)
+            tm = (tl + tr) // 2
+            if p <= tm:
+                _set(i * 2, tl, tm, p, x)
+            else:
+                _set(i * 2 + 1, tm + 1, tr, p, x)
+            self._update(i)
+
+        return _set(1, 0, self._N - 1, p, x)
+
+    def get(self, p: int) -> S:
+        def _get(i: int, tl: int, tr: int, p: int) -> S:
+            if tl == tr:
+                return self._d[i]
+            self._push(i)
+            tm = (tl + tr) // 2
+            if p <= tm:
+                return _get(i * 2, tl, tm, p)
+            else:
+                return _get(i * 2 + 1, tm + 1, tr, p)
+
+        return _get(1, 0, self._N - 1, p)
+
     def apply(self, l: int, r: int, f: F) -> None:  # [l, r)
         def _apply(i: int, tl: int, tr: int, ql: int, qr: int, f: F) -> None:  # [l, r]
             if qr < tl or tr < ql:  # [ql, qr] and [tl, tr] don't intersect
