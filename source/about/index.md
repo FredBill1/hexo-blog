@@ -14,8 +14,12 @@ layout: about
     }
 
     .author {
-        opacity: 0.2;
+        opacity: 0.1;
         transition: opacity 0.15s;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 
     .author:hover {
@@ -47,33 +51,49 @@ layout: about
     }
 </script>
 
+
 <script type="module">
-
     import * as THREE from 'three';
-
     import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
     let container, camera, scene, renderer;
     let fumoObject;
+    let fumoPivot;
     let mouseX = NaN, mouseY = NaN, scrollX = 0, scrollY = 0;
-    let renderRequested = false;
+
+    let rafId = 0;
+    let containerRect = null;
+
     const distance = 25;
     const maxZoom = 0.58;
-    const maxZoomWidth = 300;
 
     const maxBounceTime = 500;
+    const maxRotationTime = 200;
     let lastBounceTime = 0;
     let bouncing = false;
+    let rotateDirection = 1;
+
+    const MODEL_GZ  = './project_koishi_komeiji_fumo.glb.gz';
 
     init();
+
+    function requestRender() {
+        if (!fumoObject || !fumoPivot) return;
+        if (rafId) return;
+        rafId = requestAnimationFrame(render);
+    }
+
+    function updateContainerRect() {
+        if (!container) return;
+        containerRect = container.getBoundingClientRect();
+    }
 
     function init() {
         container = document.getElementById("koishifumo");
 
         scene = new THREE.Scene();
-
-        // scene.add(new THREE.AmbientLight(0x999999));
-        // scene.background = new THREE.Color(0x000000);
+        fumoPivot = new THREE.Group();
+        scene.add(fumoPivot);
 
         camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 1, 1000);
         camera.zoom = maxZoom;
@@ -81,34 +101,47 @@ layout: about
         camera.position.set(0, -distance, 0);
         camera.lookAt(scene.position);
         camera.updateProjectionMatrix();
-
-        // camera.add(new THREE.PointLight(0xffffff, 250));
         scene.add(camera);
 
-        // const grid = new THREE.GridHelper(50, 50, 0xffffff, 0x555555);
-        // grid.rotateOnAxis(new THREE.Vector3(1, 0, 0), 90 * (Math.PI / 180));
-        // scene.add(grid);
-
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer = new THREE.WebGLRenderer({
+            antialias: false,
+            alpha: true,
+            powerPreference: 'high-performance'
+        });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
         renderer.setSize(container.clientWidth, container.clientHeight);
         container.appendChild(renderer.domElement);
 
-        const loader = new GLTFLoader();
-        loader.load('./project_koishi_komeiji_fumo.glb', function (gltfobject) {
+        updateContainerRect();
+
+        async function fetchAndGunzipToArrayBuffer(url) {
+            const res = await fetch(url, { cache: 'force-cache' });
+            if (!res.ok) throw new Error(`fetch failed: ${res.status} ${res.statusText}`);
+            if (!res.body) throw new Error('streaming body not supported');
+            const stream = res.body.pipeThrough(new DecompressionStream('gzip'));
+            return await new Response(stream).arrayBuffer();
+        }
+
+        async function loadModelCompressedOnly() {
+            const ab = await fetchAndGunzipToArrayBuffer(MODEL_GZ);
+            const loader = new GLTFLoader();
+            const gltfobject = await loader.parseAsync(ab, './');
             fumoObject = gltfobject.scene;
 
-            // rotate and position the gltf object to be in the center of the screen
             fumoObject.rotation.x = Math.PI / 2;
             fumoObject.position.x = 2.5;
             fumoObject.position.z = -10;
+            fumoObject.position.y = -2;
+            fumoPivot.position.y = 2;
+            fumoPivot.add(fumoObject);
 
-            scene.add(fumoObject);
-            renderRequested = true;
             document.getElementById("loading").remove();
             document.getElementById("container").style.visibility = "visible";
-            render();
-        });
+
+            requestRender();
+        }
+
+        loadModelCompressedOnly();
 
         function updateScroll() {
             mouseX -= scrollX - window.scrollX;
@@ -117,56 +150,87 @@ layout: about
             scrollY = window.scrollY;
         }
 
-        window.addEventListener('resize', function () {
+        window.addEventListener('resize', () => {
             camera.aspect = container.clientWidth / container.clientHeight;
             camera.updateProjectionMatrix();
+
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
             renderer.setSize(container.clientWidth, container.clientHeight);
+
             updateScroll();
-            renderRequested = true;
-        });
-        window.addEventListener("mousemove", function (e) {
+            updateContainerRect();
+            requestRender();
+        }, { passive: true });
+
+        window.addEventListener('pointermove', (e) => {
             mouseX = e.pageX;
             mouseY = e.pageY;
-            renderRequested = true;
-        });
-        window.addEventListener("scroll", function (e) {
+            requestRender();
+        }, { passive: true });
+
+        window.addEventListener('pointerdown', (e) => {
+            mouseX = e.pageX;
+            mouseY = e.pageY;
+            updateContainerRect();
+            requestRender();
+        }, { passive: true });
+
+        window.addEventListener('scroll', () => {
             updateScroll();
-            renderRequested = true;
-        });
-        window.addEventListener("click", function (e) {
-            lastBounceTime = Date.now();
+            updateContainerRect();
+            requestRender();
+        }, { passive: true });
+
+        window.addEventListener('click', (e) => {
+            mouseX = e.pageX;
+            mouseY = e.pageY;
+            lastBounceTime = performance.now();
             bouncing = true;
-        });
+            const randValue = Math.random();
+            rotateDirection = randValue < 0.5 ? 0 : randValue < 0.75 ? -1 : 1;
+            requestRender();
+        }, { passive: true });
     }
 
-    function render() {
-        requestAnimationFrame(render);
-        if (!renderRequested && !bouncing) return;
-        if (renderRequested) {
-            renderRequested = false;
+    function render(now) {
+        rafId = 0;
+
+        let needsAnotherFrame = false;
+        if (containerRect) {
             if (isNaN(mouseX) || isNaN(mouseY)) {
-                camera.position.x = camera.position.z = 0;
+                camera.position.x = 0;
+                camera.position.z = 0;
             } else {
-                const centerX = container.getBoundingClientRect().left + container.clientWidth / 2;
-                const centerY = container.getBoundingClientRect().top + container.clientHeight / 2;
+                const centerX = containerRect.left + container.clientWidth / 2;
+                const centerY = containerRect.top + container.clientHeight / 2;
+
                 camera.position.x = (mouseX - window.scrollX - centerX) * -15 / window.innerWidth;
                 camera.position.z = (mouseY - window.scrollY - centerY) * 8 / window.innerHeight;
+
+                const xz2 = camera.position.x * camera.position.x + camera.position.z * camera.position.z;
+                const d2 = distance * distance;
+                const safe = Math.max(0, d2 - xz2);
+                camera.position.y = -Math.sqrt(safe);
             }
-            camera.position.y = -Math.sqrt(distance * distance - camera.position.x * camera.position.x - camera.position.z * camera.position.z);
             camera.lookAt(scene.position);
         }
 
-        if (bouncing) {
-            const dt = Date.now() - lastBounceTime;
+        if (bouncing && fumoObject && fumoPivot) {
+            const dt = now - lastBounceTime;
             if (dt > maxBounceTime) {
                 bouncing = false;
-                fumoObject.scale.y = 1
+                fumoObject.scale.y = 1;
+                fumoPivot.rotation.z = 0;
             } else {
                 const t = dt / maxBounceTime;
                 fumoObject.scale.y = 1 - 0.5 * Math.sin(t * Math.PI * 5) / (1 + t * t * 200);
+                const rotationT = Math.min(1, dt / maxRotationTime);
+                const bezierT = rotationT * rotationT * (3 - 2 * rotationT);
+                fumoPivot.rotation.z = Math.PI * 2 * bezierT * rotateDirection;
+                needsAnotherFrame = true;
             }
         }
         renderer.render(scene, camera);
+        if (needsAnotherFrame) requestRender();
     }
-
 </script>
