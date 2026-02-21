@@ -219,11 +219,12 @@ layout: about
             const dt = now - lastBounceTime;
             if (dt > maxBounceTime) {
                 bouncing = false;
-                fumoObject.scale.y = 1;
+                fumoObject.scale.x = fumoObject.scale.z = fumoObject.scale.y = 1;
                 fumoPivot.rotation.z = 0;
             } else {
                 const t = dt / maxBounceTime;
                 fumoObject.scale.y = 1 - 0.5 * Math.sin(t * Math.PI * 5) / (1 + t * t * 200);
+                fumoObject.scale.x = fumoObject.scale.z = 1 / Math.sqrt(fumoObject.scale.y);
                 const rotationT = Math.min(1, dt / maxRotationTime);
                 const bezierT = rotationT * rotationT * (3 - 2 * rotationT);
                 fumoPivot.rotation.z = Math.PI * 2 * bezierT * rotateDirection;
